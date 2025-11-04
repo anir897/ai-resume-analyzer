@@ -34,7 +34,7 @@ export default function Home() {
 
   return <main className="bg-[url('/images/bg-home.jpg')] bg-cover">
     <Navbar/>
-    {}
+   
     <section className="main-section py-16">
       <div className="page-heading">
         <h1>Apply Smart, Track Easy & Get Hired Faster.</h1>
