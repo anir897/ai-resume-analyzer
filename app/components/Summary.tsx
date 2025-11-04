@@ -1,5 +1,6 @@
 import ScoreGauge from "~/components/ScoreGauge";
 import ScoreBadge from "~/components/ScoreBadge";
+import React from "react";
 
 const Category = ({ title, score }: { title: string, score: number }) => {
     const textColor = score > 70 ? 'text-green-600'
@@ -42,3 +43,5 @@ const Summary = ({ feedback }: { feedback: Feedback }) => {
         </div>
     )
 }
+
+export default Summary;

@@ -14,7 +14,7 @@
     "@tailwindcss/cli": "^4.1.16",
     "clsx": "^2.1.1",
     "isbot": "^5.1.31",
-    "pdfjs-dist": "^5.4.296",
+    "pdfjs-dist": "^5.4.394",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-dropzone": "^14.3.8",

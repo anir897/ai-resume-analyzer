@@ -32,7 +32,7 @@ export default function Home() {
         if(!auth.isAuthenticated) navigate('/auth?next=/');
   }, [auth.isAuthenticated])
 
-  return <main className="bg-[url('/images/bg-home.jpg')] bg-cover">
+  return <main className="bg-[url('/images/bg-home.jpg')] bg-cover ">
     <Navbar/>
    
     <section className="main-section py-16">
@@ -43,7 +43,7 @@ export default function Home() {
       </div>
    
   {resumes.length > 0 && (
-  <div className="resume-section flex flex-row gap-2">
+  <div className="resume-section flex flex-wrap justify-center gap-8 w-full max-w-[1400px] mx-auto p-4">
     {resumes.map((resume) => (
       <ResumeCard
   key={resume.id}
