@@ -31,33 +31,47 @@ const WipeApp = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <main className="bg-[url('/images/bg-home.jpg')] bg-cover min-h-screen flex items-center justify-center">
+                <div className="text-white text-xl">Loading...</div>
+            </main>
+        );
     }
 
     if (error) {
-        return <div>Error {error}</div>;
+        return (
+            <main className="bg-[url('/images/bg-home.jpg')] bg-cover min-h-screen flex items-center justify-center">
+                <div className="text-white text-xl">Error {error}</div>
+            </main>
+        );
     }
 
     return (
-        <div>
-            Authenticated as: {auth.user?.username}
-            <div>Existing files:</div>
-            <div className="flex flex-col gap-4">
-                {files.map((file) => (
-                    <div key={file.id} className="flex flex-row gap-4">
-                        <p>{file.name}</p>
+        <main className="bg-[url('/images/bg-home.jpg')] bg-cover min-h-screen p-8">
+            <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-2xl p-8 shadow-lg">
+                    <h1 className="text-2xl font-bold mb-4">Authenticated as: {auth.user?.username}</h1>
+                    <div className="mb-4">
+                        <h2 className="text-xl font-semibold mb-2">Existing files:</h2>
+                        <div className="flex flex-col gap-4">
+                            {files.map((file) => (
+                                <div key={file.id} className="flex flex-row gap-4">
+                                    <p>{file.name}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                ))}
+                    <div>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600"
+                            onClick={() => handleDelete()}
+                        >
+                            Wipe App Data
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div>
-                <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer"
-                    onClick={() => handleDelete()}
-                >
-                    Wipe App Data
-                </button>
-            </div>
-        </div>
+        </main>
     );
 };
 

@@ -13,14 +13,31 @@ async function loadPdfJs(): Promise<any> {
     if (loadPromise) return loadPromise;
 
     isLoading = true;
-    // @ts-expect-error - pdfjs-dist/build/pdf.mjs is not a module
-    loadPromise = import("pdfjs-dist/build/pdf.mjs").then((lib) => {
-        // Set the worker source to use local file
-        lib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-        pdfjsLib = lib;
-        isLoading = false;
-        return lib;
-    });
+    loadPromise = (async () => {
+        try {
+            // Import pdfjs-dist - for v5.x, use the main export
+            // @ts-ignore - pdfjs-dist types may not be fully compatible
+            const lib = await import("pdfjs-dist");
+            
+            // Set the worker source - use CDN to match the installed version
+            // This ensures the worker version matches the library version
+            if (lib.GlobalWorkerOptions) {
+                // Get the version from the library itself to ensure it matches
+                const version = lib.version || "5.4.394";
+                // Use jsDelivr CDN to get the worker that matches the installed version
+                lib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
+            }
+            
+            pdfjsLib = lib;
+            isLoading = false;
+            return lib;
+        } catch (err) {
+            isLoading = false;
+            loadPromise = null;
+            console.error("Failed to load PDF.js:", err);
+            throw new Error(`Failed to load PDF.js: ${err}`);
+        }
+    })();
 
     return loadPromise;
 }
@@ -30,6 +47,11 @@ export async function convertPdfToImage(
 ): Promise<PdfConversionResult> {
     try {
         const lib = await loadPdfJs();
+
+        // Check if getDocument is available in the lib
+        if (!lib.getDocument) {
+            throw new Error("PDF.js getDocument method not found. The library may not be loaded correctly.");
+        }
 
         const arrayBuffer = await file.arrayBuffer();
         const pdf = await lib.getDocument({ data: arrayBuffer }).promise;
@@ -76,10 +98,12 @@ export async function convertPdfToImage(
             ); // Set quality to maximum (1.0)
         });
     } catch (err) {
+        console.error("PDF conversion error:", err);
+        const errorMessage = err instanceof Error ? err.message : String(err);
         return {
             imageUrl: "",
             file: null,
-            error: `Failed to convert PDF: ${err}`,
+            error: `Failed to convert PDF: ${errorMessage}`,
         };
     }
 }
